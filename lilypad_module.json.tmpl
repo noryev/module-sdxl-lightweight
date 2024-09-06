@@ -1,0 +1,53 @@
+{
+    "machine": {
+        "gpu": 1,
+        "cpu": 1000,
+        "ram": 1000
+    },
+    "job": {
+        "APIVersion": "V1beta1",
+        "Metadata": {
+            "CreatedAt": "0001-01-01T00:00:00Z",
+            "Requester": {}
+        },
+        "Spec": {
+            "Deal": {
+                "Concurrency": 1
+            },
+            "Docker": {
+                "Entrypoint": null,
+                "EnvironmentVariables": [
+                    {{ if .Prompt }}"PROMPT={{ .Prompt }}",{{ end }}
+                    {{ if .Seed }}"SEED={{ .Seed }}",{{ end }}
+                    {{ if .Steps }}"STEPS={{ .Steps }}",{{ end }}
+                    {{ if .Sampler }}"SAMPLER={{ .Sampler }}",{{ end }}
+                    {{ if .Scheduler }}"SCHEDULER={{ .Scheduler }}",{{ end }}
+                    {{ if .Size }}"SIZE={{ .Size }}",{{ end }}
+                    {{ if .Batching }}"BATCHING={{ .Batching }}",{{ end }}
+                    "HF_HUB_OFFLINE=1"
+                ],
+                "Image": "noryev/stable-diffusion-xl:latest"
+            },
+            "Engine": "Docker",
+            "Network": {
+                "Type": "None"
+            },
+            "Outputs": [
+                {
+                "Name": "outputs",
+                "Path": "/outputs"
+                }
+            ],
+            "PublisherSpec": {
+                "Type": "ipfs"
+            },
+            "Resources": {
+                "GPU": "1"
+            },
+            "Timeout": 1800,
+            "Wasm": {
+                "EntryModule": {}
+            }
+        }
+    }
+}
