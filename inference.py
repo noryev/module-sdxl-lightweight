@@ -20,7 +20,7 @@ def set_seed(seed: int = 42) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)
     print(f"Random seed set as {seed}")
 
-seed = int(os.getenv("RANDOM_SEED", "42"))
+seed = int(os.getenv("SEED", "42"))
 set_seed(seed)
 
 pipe = DiffusionPipeline.from_pretrained(
@@ -30,34 +30,34 @@ pipe = DiffusionPipeline.from_pretrained(
     variant="fp16",
 ).to("cuda")
 
-# VRAM Optimizations
 pipe.enable_attention_slicing()
 pipe.enable_vae_slicing()
 pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
 
-# For extremely low GPU memory, uncomment the next line:
-# pipe.enable_model_cpu_offload()
-
 g = torch.Generator(device="cuda")
 g.manual_seed(seed)
 
-prompt = os.getenv("PROMPT", "A lilypad floating in a galaxy of water lilies")
+prompt = os.getenv("PROMPT", "An astronaut riding a green horse")
 
-# Reduce image size and inference steps for lower VRAM usage
 with torch.inference_mode():
     images = pipe(
         prompt=prompt,
         generator=g,
-        num_inference_steps=30,  # Reduced from default 50
-        height=512,  # Reduced from default 1024
-        width=512,   # Reduced from default 1024
+        num_inference_steps=30,
+        height=512,
+        width=512,
     ).images
 
 print(f"Got {len(images)} images")
 
 image = images[0]
 
-# OUTPUT_DIR must have a trailing slash
-output_dir = os.getenv("OUTPUT_DIR", "")
-image.save(output_dir + f"image-{seed}.png")
-print(f"Image saved as {output_dir}image-{seed}.png")
+output_dir = os.getenv("OUTPUT_DIR", "/outputs/")
+os.makedirs(output_dir, exist_ok=True)
+output_path = os.path.join(output_dir, f"image-{seed}.png")
+image.save(output_path)
+print(f"Image saved as {output_path}")
+
+# Create a done file to signal job completion
+with open(os.path.join(output_dir, "DONE"), "w") as f:
+    f.write("Job completed successfully")

@@ -24,6 +24,6 @@ Anatomy of a lilypad run command
 
 
 
-Local `./stack run --network dev github.com/noryev/module-sdxl:42e8521e2b77325f8fc56fc2246e97d840f12dba`
+Local `./stack run --network dev github.com/noryev/module-sdxl-lightweight:b250c917618c8bed06be566b4a93ecc5018cccc6`
 
-Testnet `lilypad run github.com/noryev/module-sdxl:42e8521e2b77325f8fc56fc2246e97d840f12dba`
+Testnet `lilypad run github.com/noryev/module-sdxl:b250c917618c8bed06be566b4a93ecc5018cccc6`

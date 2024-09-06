@@ -24,7 +24,8 @@
                     {{ if .Scheduler }}"SCHEDULER={{ .Scheduler }}",{{ end }}
                     {{ if .Size }}"SIZE={{ .Size }}",{{ end }}
                     {{ if .Batching }}"BATCHING={{ .Batching }}",{{ end }}
-                    "HF_HUB_OFFLINE=1"
+                    "HF_HUB_OFFLINE=1",
+                    "OUTPUT_DIR=/outputs/"
                 ],
                 "Image": "noryev/sdxl-lightweight:latest"
             },
