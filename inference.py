@@ -41,7 +41,7 @@ pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
 g = torch.Generator(device="cuda")
 g.manual_seed(seed)
 
-prompt = os.getenv("PROMPT", "An astronaut riding a green horse")
+prompt = os.getenv("PROMPT", "A lilypad floating in a galaxy of water lilies")
 
 # Reduce image size and inference steps for lower VRAM usage
 with torch.inference_mode():
