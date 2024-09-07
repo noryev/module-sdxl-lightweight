@@ -15,17 +15,24 @@
         "Concurrency": 1
       },
       "Docker": {
-        "Entrypoint": null,
+        "Entrypoint": [
+          "python",
+          "sdxl_script.py",
+          "--prompt",
+          "{{ .Prompt }}",
+          "--seed",
+          "{{ .Seed }}",
+          "--steps",
+          "{{ .Steps }}",
+          "--height",
+          "{{ .Height }}",
+          "--width",
+          "{{ .Width }}",
+          "--output_dir",
+          "/outputs/"
+        ],
         "EnvironmentVariables": [
-          {{ if .Prompt }}"PROMPT={{ .Prompt }}",{{ else }}"PROMPT=A lilypad floating on a galaxy of stars",{{ end }}
-          {{ if .Seed }}"SEED={{ .Seed }}",{{ else }}"SEED=42",{{ end }}
-          {{ if .Steps }}"STEPS={{ .Steps }}",{{ else }}"STEPS=30",{{ end }}
-          {{ if .Sampler }}"SAMPLER={{ .Sampler }}",{{ end }}
-          {{ if .Scheduler }}"SCHEDULER={{ .Scheduler }}",{{ end }}
-          {{ if .Size }}"SIZE={{ .Size }}",{{ end }}
-          {{ if .Batching }}"BATCHING={{ .Batching }}",{{ end }}
-          "HF_HUB_OFFLINE=1",
-          "OUTPUT_DIR=/outputs/"
+          "HF_HUB_OFFLINE=1"
         ],
         "Image": "noryev/sdxl-lightweight:latest"
       },

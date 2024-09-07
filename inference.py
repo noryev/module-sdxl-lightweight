@@ -4,22 +4,22 @@ from diffusers import DDIMScheduler, DiffusionPipeline
 import numpy as np
 import random
 import logging
+import argparse
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Print all environment variables
-logging.info("All Environment Variables:")
-for key, value in os.environ.items():
-    logging.info(f"{key}: {value}")
+# Set up argument parsing
+parser = argparse.ArgumentParser(description='Run SDXL with custom parameters')
+parser.add_argument('--prompt', type=str, default="A lilypad floating on a galaxy of stars", help='The prompt for image generation')
+parser.add_argument('--seed', type=int, default=42, help='Random seed for generation')
+parser.add_argument('--steps', type=int, default=30, help='Number of inference steps')
+parser.add_argument('--height', type=int, default=512, help='Image height')
+parser.add_argument('--width', type=int, default=512, help='Image width')
+parser.add_argument('--output_dir', type=str, default="/outputs/", help='Output directory for generated images')
+args = parser.parse_args()
 
-# Explicitly log the PROMPT environment variable
-prompt = os.getenv("PROMPT")
-logging.info(f"PROMPT environment variable: {prompt}")
-
-# Use the prompt (rest of your script)
-prompt = os.getenv("PROMPT", "A lilypad floating on a galaxy of stars")
-logging.info(f"Using prompt: {prompt}")
+logging.info(f"Received arguments: {args}")
 
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":16:8"
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
@@ -37,14 +37,7 @@ def set_seed(seed: int = 42) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)
     logging.info(f"Random seed set as {seed}")
 
-# Log all environment variables
-logging.info("Environment variables:")
-for key, value in os.environ.items():
-    logging.info(f"{key}: {value}")
-
-seed = int(os.getenv("SEED", "42"))
-logging.info(f"Using seed: {seed}")
-set_seed(seed)
+set_seed(args.seed)
 
 pipe = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-0.9",
@@ -58,38 +51,31 @@ pipe.enable_vae_slicing()
 pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
 
 g = torch.Generator(device="cuda")
-g.manual_seed(seed)
+g.manual_seed(args.seed)
 
-prompt = os.getenv("PROMPT", "A lilypad floating on a galaxy of stars")
-logging.info(f"Using prompt: {prompt}")
-
-num_inference_steps = int(os.getenv("STEPS", "30"))
-height = int(os.getenv("HEIGHT", "512"))
-width = int(os.getenv("WIDTH", "512"))
-logging.info(f"Inference steps: {num_inference_steps}, Height: {height}, Width: {width}")
+logging.info(f"Using prompt: {args.prompt}")
+logging.info(f"Inference steps: {args.steps}, Height: {args.height}, Width: {args.width}")
 
 with torch.inference_mode():
     images = pipe(
-        prompt=prompt,
+        prompt=args.prompt,
         generator=g,
-        num_inference_steps=num_inference_steps,
-        height=height,
-        width=width,
+        num_inference_steps=args.steps,
+        height=args.height,
+        width=args.width,
     ).images
 
 logging.info(f"Generated {len(images)} images")
 
 image = images[0]
 
-output_dir = os.getenv("OUTPUT_DIR", "/outputs/")
-logging.info(f"Output directory: {output_dir}")
-os.makedirs(output_dir, exist_ok=True)
-output_path = os.path.join(output_dir, f"image-{seed}.png")
+os.makedirs(args.output_dir, exist_ok=True)
+output_path = os.path.join(args.output_dir, f"image-{args.seed}.png")
 image.save(output_path)
 logging.info(f"Image saved as {output_path}")
 
 # Create a done file to signal job completion
-done_file = os.path.join(output_dir, "DONE")
+done_file = os.path.join(args.output_dir, "DONE")
 with open(done_file, "w") as f:
     f.write("Job completed successfully")
 logging.info(f"Created DONE file: {done_file}")
