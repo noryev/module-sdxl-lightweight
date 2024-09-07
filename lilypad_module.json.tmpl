@@ -6,26 +6,49 @@
   },
   "job": {
     "APIVersion": "V1beta1",
+    "Metadata": {
+      "CreatedAt": "0001-01-01T00:00:00Z",
+      "Requester": {}
+    },
     "Spec": {
-      "Deal": {"Concurrency": 1},
+      "Deal": {
+        "Concurrency": 1
+      },
       "Docker": {
         "Entrypoint": [
           "python", "/app/sdxl_script.py",
           "--prompt", "{{ .PROMPT }}",
-          "--seed", "{{ .SEED }}",
-          "--steps", "{{ .STEPS }}",
-          "--height", "{{ .HEIGHT }}",
-          "--width", "{{ .WIDTH }}",
+          "--seed", "{{ default 42 .SEED }}",
+          "--steps", "{{ default 50 .STEPS }}",
+          "--height", "{{ default 512 .HEIGHT }}",
+          "--width", "{{ default 512 .WIDTH }}",
           "--output_dir", "/outputs/"
+        ],
+        "EnvironmentVariables": [
+          "HF_HUB_OFFLINE=1"
         ],
         "Image": "noryev/sdxl-lightweight:latest"
       },
       "Engine": "Docker",
-      "Network": {"Type": "None"},
-      "Outputs": [{"Name": "outputs", "Path": "/outputs"}],
-      "PublisherSpec": {"Type": "ipfs"},
-      "Resources": {"GPU": "1"},
-      "Timeout": 1800
+      "Network": {
+        "Type": "None"
+      },
+      "Outputs": [
+        {
+          "Name": "outputs",
+          "Path": "/outputs"
+        }
+      ],
+      "PublisherSpec": {
+        "Type": "ipfs"
+      },
+      "Resources": {
+        "GPU": "1"
+      },
+      "Timeout": 1800,
+      "Wasm": {
+        "EntryModule": {}
+      }
     }
   }
 }
