@@ -18,10 +18,10 @@
         "Entrypoint": [
           "python", "/app/sdxl_script.py",
           "--prompt", "{{ .PROMPT }}",
-          "--seed", "{{ default 42 .SEED }}",
-          "--steps", "{{ default 50 .STEPS }}",
-          "--height", "{{ default 512 .HEIGHT }}",
-          "--width", "{{ default 512 .WIDTH }}",
+          "--seed", "{{ if .SEED }}{{ .SEED }}{{ else }}42{{ end }}",
+          "--steps", "{{ if .STEPS }}{{ .STEPS }}{{ else }}50{{ end }}",
+          "--height", "{{ if .HEIGHT }}{{ .HEIGHT }}{{ else }}512{{ end }}",
+          "--width", "{{ if .WIDTH }}{{ .WIDTH }}{{ else }}512{{ end }}",
           "--output_dir", "/outputs/"
         ],
         "EnvironmentVariables": [
