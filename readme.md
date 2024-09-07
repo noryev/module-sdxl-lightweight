@@ -14,7 +14,7 @@ docker run -ti --gpus all \
     -v $PWD/outputs:/outputs \
     -e OUTPUT_DIR=/outputs/ \
     -e PROMPT="a lilypad on a galaxy of water" \
-     stable-diffusion-xl:latest
+     sdxl-lightweight:latest
 ```
 Will overwrite `outputs/image0.png` each time.
 

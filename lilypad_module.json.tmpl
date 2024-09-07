@@ -17,13 +17,13 @@
       "Docker": {
         "Entrypoint": null,
         "EnvironmentVariables": [
-          {{ if .Prompt }}"{{ subst "PROMPT=%s" .Prompt }}",{{ end }}
-          {{ if .Seed }}"{{ subst "SEED=%s" .Seed }}",{{ end }}
-          {{ if .Steps }}"{{ subst "STEPS=%s" .Steps }}",{{ end }}
-          {{ if .Sampler }}"{{ subst "SAMPLER=%s" .Sampler }}",{{ end }}
-          {{ if .Scheduler }}"{{ subst "SCHEDULER=%s" .Scheduler }}",{{ end }}
-          {{ if .Size }}"{{ subst "SIZE=%s" .Size }}",{{ end }}
-          {{ if .Batching }}"{{ subst "BATCHING=%s" .Batching }}",{{ end }}
+          {{ if .Prompt }}"PROMPT={{ .Prompt }}",{{ else }}"PROMPT=A lilypad floating on a galaxy of stars",{{ end }}
+          {{ if .Seed }}"SEED={{ .Seed }}",{{ else }}"SEED=42",{{ end }}
+          {{ if .Steps }}"STEPS={{ .Steps }}",{{ else }}"STEPS=30",{{ end }}
+          {{ if .Sampler }}"SAMPLER={{ .Sampler }}",{{ end }}
+          {{ if .Scheduler }}"SCHEDULER={{ .Scheduler }}",{{ end }}
+          {{ if .Size }}"SIZE={{ .Size }}",{{ end }}
+          {{ if .Batching }}"BATCHING={{ .Batching }}",{{ end }}
           "HF_HUB_OFFLINE=1",
           "OUTPUT_DIR=/outputs/"
         ],
