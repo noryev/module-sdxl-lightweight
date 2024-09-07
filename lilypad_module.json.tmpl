@@ -17,11 +17,11 @@
       "Docker": {
         "Entrypoint": [
           "python", "/app/sdxl_script.py",
-          "--prompt", "{{ .PROMPT }}",
-          "--seed", "{{ .SEED }}",
-          "--steps", "{{ .STEPS }}",
-          "--height", "{{ .HEIGHT }}",
-          "--width", "{{ .WIDTH }}",
+          "--prompt", {{ .PROMPT | printf "%q" }},
+          "--seed", {{ .SEED | printf "%q" }},
+          "--steps", {{ .STEPS | printf "%q" }},
+          "--height", {{ .HEIGHT | printf "%q" }},
+          "--width", {{ .WIDTH | printf "%q" }},
           "--output_dir", "/outputs/"
         ],
         "EnvironmentVariables": [
